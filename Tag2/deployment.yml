@@ -21,3 +21,23 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+
+# Sehr ähnlich wie Replica sets, bloß das deployments RollingUpdates und Rollbacks unterstützen
+# # Jedes Deployment erzeugt einen ReplicaSet
+# Das ReplicaSet erzeugt die Pods
+# >kubectl get all
+# NAME                                    READY   STATUS     RESTARTS   AGE     LABELS
+# pod/nginx-deployment-7cc4fc4bdd-fzq5t   1/1     Running    0          2m53s   app=nginx-instance,pod-template-hash=7cc4fc4bdd,topology.kubernetes.io/region=europe-west3,topology.kubernetes.io/zone=europe-west3-c
+# pod/nginx-deployment-7cc4fc4bdd-vn298   1/1     Running    0          2m53s   app=nginx-instance,pod-template-hash=7cc4fc4bdd,topology.kubernetes.io/region=europe-west3,topology.kubernetes.io/zone=europe-west3-c
+# pod/nginx-deployment-7cc4fc4bdd-w6lgw   1/1     Running    0          2m53s   app=nginx-instance,pod-template-hash=7cc4fc4bdd,topology.kubernetes.io/region=europe-west3,topology.kubernetes.io/zone=europe-west3-c
+# pod/nginx-ohne-alle                     1/1     Running    0          35m     label=123,topology.kubernetes.io/region=europe-west3,topology.kubernetes.io/zone=europe-west3-c
+# pod/pod-ohne-res                        1/2     NotReady   0          144m    label=Test,topology.kubernetes.io/region=europe-west3,topology.kubernetes.io/zone=europe-west3-c
+
+# NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE   LABELS
+# service/nginx   ClusterIP   34.118.231.182   <none>        80/TCP    22h   run=nginx,topology.kubernetes.io/region=europe-west3,topology.kubernetes.io/zone=europe-west3-c
+
+# NAME                               READY   UP-TO-DATE   AVAILABLE   AGE     LABELS
+# deployment.apps/nginx-deployment   3/3     3            3           2m53s   app=nginx-deployment
+
+# NAME                                          DESIRED   CURRENT   READY   AGE     LABELS
+# replicaset.apps/nginx-deployment-7cc4fc4bdd   3         3         3       2m53s   app=nginx-instance,pod-template-hash=7cc4fc4bdd

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmapkeyref-test-pod
+spec:
+  containers:
+    - name: configmapkeyref-test-container
+      image: busybox:1.31.0
+      command: [ "/bin/sh", "-c", "env | grep FIRMA_NAME" ]
+      env:
+        - name: FIRMA_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: firma-config
+              key: firma
+  restartPolicy: Never
+ 

@@ -1,0 +1,17 @@
+Erstelle eine ConfigMap namens app-config mit folgenden Daten:
+app.title: "Willkommen bei meinem K8s-Test"
+app.color: "blue"
+
+Zusätzlich: 
+Erstelle eine Datei namens settings.conf lokal mit dem Inhalt debug=true und füge diese Datei ebenfalls der ConfigMap hinzu.
+
+
+Erstelle einen Pod (oder Deployment) mit dem Image nginx.
+Übergib den Wert von app.color als Umgebungsvariable namens BG_COLOR an den Container.
+Mounte die Datei settings.conf aus der ConfigMap in das Verzeichnis /etc/config/ innerhalb des Containers.
+Hinweis: die Daten haben keinen Einfluss auf die Ausführung von nginx.
+
+Überprüfe mit 'exec' ob die Umgebungsvariable BG_COLOR gestetz ist.
+Überprüfe mit 'exec', ob die Datei /etc/config/settings.xml gemountet wurde.
+
+

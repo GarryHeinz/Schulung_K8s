@@ -1,0 +1,7 @@
+Erstellen Sie eine ConfigMap, um den Port der Anwendung http-echo zu konfigurieren.
+Hinweis: in dem Abschnitt args können Sie auf Umgebungs-Variablen über die Syntax $(<Name>) zugreifen.
+
+Überprüfen Sie das Ergebnis.
+
+Was passiert, wenn Sie in der ConfigMap den Wert für den Port auf 8081 verändern?
+

@@ -1,0 +1,18 @@
+Erstellen Sie einen pod mit 
+- Image hashicorp/http-echo
+- Argumenten
+-- "text=Hallo Seminarteilnehmer"
+-- "-listen=:9999"
+
+Ergänzen Sie eine startupProbe
+- Überprüfung, ob der Socket auf 9999 vorhanden ist.
+- Initiale Wartezeit ist 5 Sekunden
+- Startup-Probe gilt als nicht-bestanden, wenn 10 mal hintereinander der Socket nicht vorgefunden wird.
+- Die Überprüfung soll alle 10 Sekunden durchgeführt werden.
+
+Ergnzen Sie eine livenessProbe
+- Überprüft wird, ob unter http://localhost:9999 vom Container ein HTTP-200 zurückgeliefert wird.
+- Initiale Wartezeit ist 5 Sekunden
+- Liveness-Probe gilt als nicht-bestanden, wenn 3 mal hintereinander der Socket nicht vorgefunden wird.
+- Die Überprüfung soll alle 10 Sekunden durchgeführt werden.
+

@@ -1,0 +1,9 @@
+Legen Sie eine ConfigMap nachricht  mit den folgenden Daten an:
+NACHRICHT: "Nachricht vom Mond"
+
+Erstellen Sie ein Manifest für einen pod mit dem Image busybox, der die Umgebungsvariable MESSAGE auf die Standardausgabe ausgibt.
+Benutzen Sie in dem Pod-Manifest die ConfigMap einfache-nachricht.
+Überführen Sie darin den Wert der Variablen NACHRICHT in die Umgebungsvariable MESSAGE.
+
+Überprüfen Sie das Ergebnis, indem Sie sich die Log des Pods ausgeben lassen.
+

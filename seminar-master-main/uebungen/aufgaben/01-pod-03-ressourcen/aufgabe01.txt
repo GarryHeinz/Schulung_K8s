@@ -1,0 +1,13 @@
+A) Benutzen Sie den Container polinux/stress um einen Memory-Verbrauch zu simulieren.
+Verwenden Sie dazu zum Beispiel die Argumente
+ --v 1 --vm-bytes 200M
+
+Das erstellt durch einen Worker (--v 1) einen Speicherverbrauch von 200 MB.
+
+Limitieren Sie das Speicher-Limit durch das Pod-Manifest.
+
+Erläuterung:
+Der Parameter --vm gibt an, wie viele sogenannte Speicher-Worker gestartet werden. Jeder dieser Worker reserviert unabhängig voneinander Speicher. Mit --vm 1 wird genau ein Worker gestartet, der Speicher allokiert.
+
+Mit dem Parameter --vm-bytes legen Sie fest, wie viel Speicher jeder dieser Worker belegen soll. Wenn Sie zum Beispiel --vm-bytes 200M angibst, versucht der Worker etwa 200 Megabyte Arbeitsspeicher zu reservieren. 
+
