@@ -1,4 +1,3 @@
-# LimitRange for Pod or Container
 apiVersion: v1
 kind: LimitRange
 metadata:
@@ -20,3 +19,5 @@ spec:
     min:
       cpu: 100m
       memory: 256Mi
+
+# https://kubernetes.io/docs/concepts/policy/limit-range/

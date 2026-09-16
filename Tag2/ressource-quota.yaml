@@ -10,5 +10,6 @@ spec:
     limits.memory: 1Gi #limit.memory *ALLER PODS* darf 1 n
     pods: '4' # es dürfen nicht mehr als 4 Pods gleichzeitig da sein
 
+# https://kubernetes.io/docs/concepts/policy/resource-quotas/
 # Ressource Quota begrenzen, was angegeben ist und erzwingen einer Ressouren angabe
 #

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-ohne-res
+spec:
+  containers:
+  - name: web-server
+    image: nginx
+    ports:
+    - containerPort: 80
+      name: http
+  - name: log-shipper
+    image: alpine:3.18
+    command: [ "sh", "-c", "echo 'logging 123'" ]
