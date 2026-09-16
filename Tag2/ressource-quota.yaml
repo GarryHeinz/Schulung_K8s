@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: begrenze-pods-quota
+spec:
+  hard:
+    requests.cpu: '500Mi' # Request.cpu *ALLER PODS* darf 500MI nicht überschreiten
+    requests.memory: 500Mi # Request.memory *ALLER PODS* darf 500MI nicht überschreiten
+    limits.cpu: '2' # limit.cpu *ALLER PODS* darf 2 nicht überschreiten
+    limits.memory: 1Gi #limit.memory *ALLER PODS* darf 1 n
+    pods: '4' # es dürfen nicht mehr als 4 Pods gleichzeitig da sein
+
+# Ressource Quota begrenzen, was angegeben ist und erzwingen einer Ressouren angabe
+#

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-mit-ressources4
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      limits:
+        cpu: 2
+        memory: 200Mi
+      requests:
+        cpu: 2
+        memory: 100Mi
+  restartPolicy: Always
+
+#
+#
+# Error from server (Forbidden): error when creating ".\\Tag2\\pod-mit-ressources.yml": pods "pod-mit-ressources4" is forbidden: exceeded quota: begrenze-pods-quota, requested: limits.cpu=2,limits.memory=200Mi, used: limits.cpu=600m,limits.memory=900Mi, limited: limits.cpu=2,limits.memory=1Gi

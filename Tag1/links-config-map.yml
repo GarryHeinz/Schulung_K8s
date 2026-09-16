@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dataport-seminar-links
+data:
+  gitlab: https://gitlab.kubernetes-cluster-100.schulung.gcp.ordix.de/seminar
+  kubernets: https://kubernetes.io/

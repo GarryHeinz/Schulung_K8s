@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-ohne-alle
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+      name: http
+  restartPolicy: Always
+
+# Bei Auskommentierten Ressources:
+# kubectl apply -f pod-ohne-alles.yml
+# > Error from server (Forbidden): error when creating ".\\Tag2\\pod-ohne-alles.yml": pods "nginx-ohne-alle" is forbidden: failed quota: begrenze-pods-quota: must specify limits.cpu for: nginx; limits.memory for: nginx; requests.cpu for: nginx; requests.memory for: nginx
+#
+# Wenn eine Limit Range angegeben ist, darf wieder ein Pod erzeugt werden ohne ressource
+#
