@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replica
+  labels:
+    app: nginx-replica
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-instance
+  template:
+    metadata:
+      labels:
+        app: nginx-instance # Dieses Label muss selector > MatchLabels mindestens einem Pod entsprechen
+    spec:
+      containers:
+      - name: nginx
+        image: nginx/nginx
+        ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP

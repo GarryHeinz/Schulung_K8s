@@ -5,3 +5,6 @@ metadata:
 data:
   gitlab: https://gitlab.kubernetes-cluster-100.schulung.gcp.ordix.de/seminar
   kubernets: https://kubernetes.io/
+
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+#

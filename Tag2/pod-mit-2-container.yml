@@ -11,4 +11,8 @@ spec:
       name: http
   - name: log-shipper
     image: alpine:3.18
-    command: [ "sh", "-c", "echo 'logging 123'" ]
+    command: [ "sh", "-c", "echo 'logging 123'; sleep 60" ]
+  restartPolicy: Never
+
+#
+#

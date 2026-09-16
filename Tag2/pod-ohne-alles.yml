@@ -9,7 +9,6 @@ spec:
     ports:
     - containerPort: 80
       name: http
-  restartPolicy: Always
 
 # Bei Auskommentierten Ressources:
 # kubectl apply -f pod-ohne-alles.yml
