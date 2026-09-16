@@ -1,0 +1,17 @@
+# For testing pipeline - Kubernetes connectivity
+stages:
+  - get-namespaces
+
+get-k8s-namespaces:
+  stage: get-namespaces
+  image: bitnami/kubectl:latest
+  script:
+    - echo "Identifying Project this is executed in"
+    - echo "From project - $CI_PROJECT_PATH"
+    - echo "Setting up kubeconfig"
+    - mkdir -p ~/.kube
+    - echo "$KUBECONFIG" > ~/.kube/config
+    - echo "Getting namespaces"
+    - kubectl get services
+variables:
+  KUBECONFIG: /home/user01/.kube
