@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: last4
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: [ "sh", "-c", "while true; do wget -q -O- http://nginx-svc; done" ]
+
+# kubectl logs last
+# [...] welcome to nginx [...]
