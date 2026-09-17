@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage-user112
+provisioner: kubernetes.io/no-provisionier
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer

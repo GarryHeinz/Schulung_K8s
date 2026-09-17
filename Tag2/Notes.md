@@ -18,3 +18,6 @@ Metainformationen die nicht von Kubernetes verwendet werden
 
 ## ReplicaSet
 Verwaltet Pods anhand von Labels (n-Pods die label "app.kubernetes.io/name"=MyApp enthalten)
+
+## Services
+*TODO* Nacharbeiten!! 

@@ -13,3 +13,6 @@ spec:
   ports:
   - port: 80
     targetPort: 80
+
+# kubectl autoscale deploy nginx-deployment --min=1 --max=5 --cpu=20
+#
