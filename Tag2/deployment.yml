@@ -23,7 +23,7 @@ spec:
         - containerPort: 80
 
 # Sehr ähnlich wie Replica sets, bloß das deployments RollingUpdates und Rollbacks unterstützen
-# # Jedes Deployment erzeugt einen ReplicaSet
+# Jedes Deployment erzeugt einen ReplicaSet
 # Das ReplicaSet erzeugt die Pods
 # >kubectl get all
 # NAME                                    READY   STATUS     RESTARTS   AGE     LABELS

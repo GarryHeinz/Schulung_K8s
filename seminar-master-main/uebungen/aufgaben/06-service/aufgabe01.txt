@@ -1,0 +1,10 @@
+Deployen Sie die Anwendung hashicorp/http-echo.
+Erstellen Sie einen curl-Container, um die Anwendung hashicorp zu erreichen.
+
+Die IP-Adresse eines Pods bekommen Sie durch das folgende Kommando heraus
+$ kubectl get pod -o wide 
+
+Einen Curl-Container erstellen Sie mit dem Befehl
+$ kubectl run curl --image=curlimages/curl -it --rm -- sh
+
+

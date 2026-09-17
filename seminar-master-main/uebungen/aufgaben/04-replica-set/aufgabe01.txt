@@ -1,0 +1,11 @@
+Erstellen Sie ein Replica-Set auf der Basis des Images  hashicorp/http-echo
+Die Anzahl der Replicas definieren Sie als 2.
+
+Lassen Sie sich das 
+-- Replicaset anzeigen
+-- die Pods anzeigen
+Löschen Sie ein Pod - was passiert?
+Verringern Sie die Anzahl der Replicas auf 1 - was passiert?
+Verringern Sie die Anzahl der Replicas auf 0 
+Steigern Sie die Anzahl der Replicas auf 1
+

@@ -1,0 +1,4 @@
+Erstellen Sie für hashicorp ein Deployment mit 2 Replikas.
+Welche Eigenschaften muss das Deployment haben, damit der eingerichtete Service weiter verwendet wird?
+Überprüfen Sie, ob alle Endpunkte des Deployments durch den Service angesprochen werden.
+
