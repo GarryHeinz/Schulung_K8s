@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todos
+  #namespace: ngj
+  labels:
+      app.kubernetes.io/name: todos
+      app.kubernetes.io/instance: todos
+      app.kubernetes.io/version: "1.0.0"
+      app.kubernetes.io/managed-by: Kubectl
+      app.kubernetes.io/created-by: ngj
+  annotations:
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/issuer: gitlab-issuer
+    kubernetes.io/ingress.provider: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: todos
+                port:
+                  number: 8080
+            path: "/"
+            pathType: Prefix
+          

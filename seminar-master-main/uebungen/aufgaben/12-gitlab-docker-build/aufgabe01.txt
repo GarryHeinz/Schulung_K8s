@@ -1,0 +1,11 @@
+Erstellen Sie ein Build-Skript mit zwei Jobs.
+Im ersten Job erstellen Sie eine Datei in dem Verzeichnis ergebnis. Beispiel:
+- mkdir ergebnis
+- cd ergebnis
+- echo "Das ist das Ergebnis harter Arbeit" > meineDatei.txt 
+
+In einem zweiten Job des Build-Skripts geben Sie die Datei ergebnis/meineDatei.txt aus.
+
+Verwenden Sie für beide Jobs das Image maven:3.9.9-eclipse-temurin-21
+
+Schritt 2 - erstellen Sie Variablen für das Verzeichnis- und den Dateinamen.

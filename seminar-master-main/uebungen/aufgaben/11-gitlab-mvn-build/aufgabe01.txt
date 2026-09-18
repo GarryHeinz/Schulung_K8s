@@ -1,0 +1,6 @@
+In einem Build-Prozess benötigen Sie die Dateien des Projekts.
+Lassen Sie sich ein einem build-Skript anzeigen, wo die Projekt-Daten zu finden sind.
+Verwenden Sie dazu entweder den Befehl 'find .' oder ein 'ls -lR'.
+Verwenden Sie das Image maven:3.9.9-eclipse-temurin-21
+
+

@@ -1,0 +1,16 @@
+# Daten sind noch einzusetzen!
+apiVersion: v1
+kind: Pod
+metadata:
+  name: containerapp
+spec:
+  imagePullSecrets:
+    - name: gitlab-registry
+ 
+  containers:
+    - name: containerapp
+      image: <URL des Image>
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+

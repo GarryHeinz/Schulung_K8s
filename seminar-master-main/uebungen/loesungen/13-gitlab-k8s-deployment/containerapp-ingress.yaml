@@ -1,0 +1,24 @@
+# Daten unten einsetzen
+# auch userXX durch aktuellen User ersetzen
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: containerapp
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+ 
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: <DNS des Host>
+      http:
+        paths:
+          - path: /containerapp-userXXX(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: containerapp
+                port:
+                  number: 80
+

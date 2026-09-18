@@ -1,0 +1,8 @@
+Verwenden Sie ein gemeinsames Volume (emptyDir) für den Inhalt einer Website:
+- nginx bindet das Volume unter dem mountPath: /usr/share/nginx/html ein.
+- busybox bindet das Volume unter /web-content ein.
+
+Beide Container befinden sich in demselben pod.
+
+Verbinden Sie sich mit der busybox und schreiben die Datei index.html in das Verzeichnis /web-content.
+Prüfen Sie durch einen Request, dass nginx diese Datei auch liest. 
