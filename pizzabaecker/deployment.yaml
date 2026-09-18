@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pizzabaecker
+  labels:
+    app: pizzabaecker
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pizzabaecker
+  template:
+    metadata:
+      labels:
+        app: pizzabaecker
+    spec:
+      containers:
+      - name: pizzabaecker
+        image: registry.user50.schulung.extern.gcp.ordix.de/root/pizzabaecker:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pizzabaecker
+spec:
+  selector:
+    app: pizzabaecker
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pizzabaecker
+  annotations:
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/issuer: gitlab-issuer
+    kubernetes.io/ingress.provider: nginx
+  labels:
+    name: pizzabaecker
+spec:
+  ingressClassName: gitlab-nginx
+  tls:
+  - hosts:
+    - pizzabaecker.user50.schulung.extern.gcp.ordix.de
+    secretName: pizzabaecker-tls
+  rules:
+  - host: pizzabaecker.user50.schulung.extern.gcp.ordix.de
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: pizzabaecker
+            port: 
+              number: 8080

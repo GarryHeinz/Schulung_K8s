@@ -1,0 +1,134 @@
+# default:
+#   tags:
+#     - "user180"
+
+stages:
+  - verify
+  - image
+  - deploy
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "cicd-k8s-gitlab"'
+
+variables:
+  MAVEN_IMAGE: "maven:3.9.9-eclipse-temurin-17"
+  BUILDAH_IMAGE: "quay.io/buildah/stable:v1.37.5"
+  KUBECTL_IMAGE: "gcr.io/google.com/cloudsdktool/google-cloud-cli:stable"
+  MAVEN_CLI_OPTS: "--settings .m2/settings.xml --batch-mode --errors --fail-at-end --show-version"
+  STORAGE_DRIVER: "vfs"
+  BUILDAH_ISOLATION: "chroot"
+  KUBE_NAMESPACE: "dev-namespace"
+  DEPLOY_IMAGE: "registry.kubernetes-cluster-100.schulung.gcp.ordix.de/seminar/todos"
+
+.maven:
+  image: $MAVEN_IMAGE
+  cache:
+    key: "maven-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - .m2/repository
+  before_script:
+    - test -n "$NEXUS_CA_CERT_BASE64"
+    - test -n "$NEXUS_MAVEN_URL"
+    - test -n "$NEXUS_USERNAME"
+    - test -n "$NEXUS_PASSWORD"
+    - printf '%s' "$NEXUS_CA_CERT_BASE64" | base64 --decode > /tmp/nexus-ca.crt
+    - keytool -importcert -noprompt -trustcacerts -alias nexus-ca -file /tmp/nexus-ca.crt -keystore "$JAVA_HOME/lib/security/cacerts" -storepass changeit
+    - mkdir -p .m2
+    - |
+      cat > .m2/settings.xml <<EOF
+      <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
+        <servers>
+          <server>
+            <id>nexus-proxy</id>
+            <username>${NEXUS_USERNAME}</username>
+            <password>${NEXUS_PASSWORD}</password>
+          </server>
+        </servers>
+        <mirrors>
+          <mirror>
+            <id>nexus-proxy</id>
+            <url>${NEXUS_MAVEN_URL}</url>
+            <mirrorOf>*</mirrorOf>
+          </mirror>
+        </mirrors>
+      </settings>
+      EOF
+
+verify:maven:
+  extends: .maven
+  stage: verify
+  script:
+    - mvn $MAVEN_CLI_OPTS clean verify
+  artifacts:
+    paths:
+      - target/todos.jar
+    expire_in: 1 day
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "cicd-k8s-gitlab"'
+
+.container:
+  stage: image
+  image:
+    name: $BUILDAH_IMAGE
+    entrypoint: [""]
+  variables:
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
+    KUBERNETES_MEMORY_LIMIT: "4Gi"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_LIMIT: "2"
+  needs:
+    - job: verify:maven
+      artifacts: true
+  before_script:
+    - test -f target/todos.jar
+  script:
+    - buildah bud --storage-driver "$STORAGE_DRIVER" --isolation "$BUILDAH_ISOLATION" --format docker --file "$CI_PROJECT_DIR/Dockerfile" --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" "$CI_PROJECT_DIR"
+
+build:image:
+  extends: .container
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "cicd-k8s-gitlab"'
+
+publish:image:
+  extends: .container
+  script:
+    - buildah bud --storage-driver "$STORAGE_DRIVER" --isolation "$BUILDAH_ISOLATION" --format docker --file "$CI_PROJECT_DIR/Dockerfile" --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" --tag "$CI_REGISTRY_IMAGE:latest" "$CI_PROJECT_DIR"
+    - echo "$CI_REGISTRY_PASSWORD" | buildah login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    - buildah push --storage-driver "$STORAGE_DRIVER" --retry 6 --retry-delay 10s "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" "docker://$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+    - buildah push --storage-driver "$STORAGE_DRIVER" --retry 6 --retry-delay 10s "$CI_REGISTRY_IMAGE:latest" "docker://$CI_REGISTRY_IMAGE:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "cicd-k8s-gitlab"'
+
+deploy:kubernetes:
+  stage: deploy
+  image:
+    name: $KUBECTL_IMAGE
+    entrypoint: [""]
+  needs:
+    - publish:image
+  before_script:
+    - test -n "$CI_DEPLOY_USER"
+    - test -n "$CI_DEPLOY_PASSWORD"
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends kubectl
+    - |
+      if test "$CI_RUNNER_EXECUTOR" = "docker"; then
+        test -d /runner-gcloud-config
+        mkdir -p /root/.config
+        cp -a /runner-gcloud-config /root/.config/gcloud
+      fi
+    - kubectl config get-contexts
+  script:
+    - kubectl --namespace "$KUBE_NAMESPACE" create secret docker-registry gitlab-registry-secret --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" --dry-run=client --output=yaml | kubectl --namespace "$KUBE_NAMESPACE" apply --filename -
+    - sed -e "s|__GITLAB_IMAGE__|$DEPLOY_IMAGE:$CI_COMMIT_SHA|g" -e "s|__KUBE_NAMESPACE__|$KUBE_NAMESPACE|g" .k8s/deploy_all.yaml | kubectl --namespace "$KUBE_NAMESPACE" apply --filename -
+    - |
+      if ! kubectl --namespace "$KUBE_NAMESPACE" rollout status deployment/todos-gitlab --timeout=180s; then
+        kubectl --namespace "$KUBE_NAMESPACE" rollout undo deployment/todos-gitlab
+        exit 1
+      fi
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "cicd-k8s-gitlab"'

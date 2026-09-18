@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Haven</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADT0lEQVRYCe1WTWgTQRR+M7vZJE1Sm1ht1VpRqFUQFRQ8CKKgBz0oiicPgidBPCh4EG+CB08evQuCJ8GDINaDhz0IghREEAQFW/FHW6u1tE3S/O1mZ3xvdjfZbLYbG4UiOLBv33vz5n3fzpt5GxPxzE9cEW+9z8hCZF0dJB4gFBEK4XnwgiSxoiTzIkmUXJnxwVgs5xHKvUSIw4W6n4jN14UL7NvR2EQB8A+FY0QUxs8MeAHCAakBl8vlwtTUlE9VVd/MzIw/n88LsiwzXdeZ4zjEdd3/TgBYwOfz8YAG4KqqciMjI0Iul2PgPM87lmVx0zS5YRgUYfR63UOTQhEFyH9KQazrulyr1TgAkxQYSiaTXK/XPREejIYnAEFsN8IjmAeK4/4qAVDRq1KpNIGNj48zm83yQqFQB0fHPDo5fBaD0IGGsZE0fw2tf+8EQFo9R7lcblYgFAqxdDrNR0dHWbVarQO7QxgJsFmwELQV0JYAZzBHCGAUAiiKAqfgkUiEZ7NZG5Xw4XCYxmIxWigU7HK5vLT5NAhgWRYRBIGYpimYpukIgkCz2SxZXl4m8/PzJJFIkEQiQTY2NmgqlaLRaNQOBAJSPB5nS0tLtpfgxlTzgD0cHBz0DQ8P+3O5nLy6uipns1nf5OSkH0IAPM0Mw/AUbIlhGDQUCtFQKMQqlYoFuDRNk+dyOQ0KJhIJHZpgNpv1HEHbEkBKVSaTkaampiQEEjVNo7FYzEVjKaVkfX2dDA0NkdXVVbq0tMRGRkYYvIONjY2Jubm5+omO1Ot6BzTIh/5TAIbIUQ2YcQItwBFLFAD7HFGQmqZpsVjMxZ7TAkxYK6xtLRQBcI34HYvFGEYG+x0MBqVAICBiRLBXqG5zHDlmBN+FOqCcBRK4rivgvbAsi2NP0D+AEXiGgLiPAn3Hb4BQVVXZB3nv0hROIMQhiHsieIceJbQ7KfFI5REeo1yFRTwRuHeQKGPPewkdWKhWqwpUBvCO0yHAMc2hMX7HcaRgMGiCjWVZsud8QVmw/ZUAInCIICq8QQHwGxui8xhMPBQKUbwPEwRZXFx0P3579lQURcd1XcPzGyJJkmOapv719/M7tQDnF9wcmN8AAAAASUVORK5CYII=">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Source Sans Pro', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        coffee: {
+                            50: '#F5F1EE',
+                            100: '#E6DCD4',
+                            200: '#D4BBA8',
+                            300: '#C19B7C',
+                            400: '#A67B59',
+                            500: '#8B5E3C',
+                            600: '#704C31',
+                            700: '#553A25',
+                            800: '#3A2719',
+                            900: '#1F150D',
+                        },
+                        latte: {
+                            50: '#FFFBF5',
+                            100: '#FDECD7',
+                            200: '#FAD7AF',
+                            300: '#F6C088',
+                            400: '#EAA05B',
+                        }
+                    },
+                    boxShadow: {
+                        glow: '0 20px 60px rgba(125, 85, 51, 0.25)',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: 0.2 },
+                            '50%': { opacity: 0.5 },
+                        },
+                    },
+                    animation: {
+                        float: 'float 9s ease-in-out infinite',
+                        pulseSoft: 'pulseSoft 12s ease-in-out infinite',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-coffee-50 via-white to-coffee-100 text-coffee-900 font-sans min-h-screen">
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute -top-24 -right-16 w-72 h-72 bg-latte-200 opacity-70 blur-3xl rounded-full animate-pulseSoft"></div>
+        <div class="absolute -bottom-32 -left-10 w-80 h-80 bg-coffee-200 opacity-60 blur-3xl rounded-full animate-pulseSoft"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.8),_rgba(245,241,238,0.3))]"></div>
+    </div>
+    <nav class="backdrop-blur-md bg-white/80 border-b border-white/60 text-coffee-800 fixed w-full top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto flex flex-col gap-3 md:flex-row md:gap-0 md:items-center md:justify-between px-6 py-4">
+            <div class="flex items-center gap-3">
+                <div class="h-11 w-11 rounded-2xl bg-gradient-to-br from-coffee-500 to-coffee-700 text-white flex items-center justify-center shadow-glow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M3 8h18M6 8V5a2 2 0 012-2h8a2 2 0 012 2v3m-1 5v5a4 4 0 01-4 4H7a4 4 0 01-4-4v-5h16z" />
+                    </svg>
+                </div>
+                <div>
+                    <a href="{{ url_for('index') }}" class="text-2xl font-serif font-semibold text-coffee-800">Coffee Haven</a>
+                    <p class="text-sm text-coffee-600">Curated essentials for mindful brewing</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+                {% set current_category = request.args.get('category', 'all') %}
+                {% set nav_categories = [
+                    {'label': 'Equipment', 'slug': 'equipment'},
+                    {'label': 'Beans', 'slug': 'beans'},
+                    {'label': 'Lifestyle', 'slug': 'lifestyle'}
+                ] %}
+                <div class="hidden sm:flex items-center gap-4 text-sm text-coffee-600">
+                    {% for nav in nav_categories %}
+                    {% set nav_url = url_for('index') if nav.slug == 'all' else url_for('index', category=nav.slug) %}
+                    {% set is_active = current_category == nav.slug %}
+                    <a href="{{ nav_url }}"
+                        class="px-3 py-1 rounded-full transition-colors border {{ 'bg-coffee-800 text-white border-coffee-800' if is_active else 'bg-coffee-50 border-coffee-100 hover:bg-coffee-100' }}">
+                        {{ nav.label }}
+                    </a>
+                    {% endfor %}
+                </div>
+                <a href="{{ url_for('cart') }}"
+                    class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-coffee-600 to-coffee-500 text-white shadow-glow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                    </svg>
+                    <span>Cart</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="max-w-6xl mx-auto px-6 pb-10 text-sm text-coffee-500">
+        <div class="border-t border-coffee-100 pt-6 flex flex-col sm:flex-row justify-between gap-2">
+            <span>© Coffee Haven Collective</span>
+            <span>Crafted for mindful brewing rituals</span>
+        </div>
+    </footer>
+</body>
+
+</html>

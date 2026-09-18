@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todos-gitlab
+  namespace: __KUBE_NAMESPACE__
+  labels:
+    app.kubernetes.io/name: todos
+    app.kubernetes.io/instance: todos-gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: todos
+      app.kubernetes.io/instance: todos-gitlab
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: todos
+        app.kubernetes.io/instance: todos-gitlab
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+        - name: todos
+          image: __GITLAB_IMAGE__
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todos-gitlab
+  namespace: __KUBE_NAMESPACE__
+  labels:
+    app.kubernetes.io/name: todos
+    app.kubernetes.io/instance: todos-gitlab
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: todos
+    app.kubernetes.io/instance: todos-gitlab
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http

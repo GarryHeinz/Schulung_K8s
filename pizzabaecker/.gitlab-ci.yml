@@ -1,0 +1,60 @@
+stages:
+  - test
+  - build
+  - package
+  - deploy 
+
+variables:
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  MAVEN_IMAGE: maven:3.8.3-openjdk-17
+  DOCKER_HOST: tcp://localhost:2376
+  DOCKER_TLS_VERIFY: "true"
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+
+.maven_job:
+  image: ${MAVEN_IMAGE}
+  cache:
+    paths:
+    - .m2/repository
+    
+Test:JUnit:
+  extends: .maven_job
+  stage: test
+  script:
+    - 'mvn $MAVEN_CLI_OPTS test'
+
+Code Analysis:Sonarqube:
+  extends: .maven_job
+  stage: test
+  script:
+    - 'mvn $MAVEN_CLI_OPTS verify sonar:sonar -Dsonar.host.url=http://sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 -Dsonar.login=admin -Dsonar.password=admin'
+  
+Build:Jar:
+  extends: .maven_job
+  stage: build
+  script:
+    - 'mvn --settings ci_settings.xml $MAVEN_CLI_OPTS -Dmaven.test.skip=true deploy'
+  artifacts:
+    when: always
+    paths:
+      - ./target/*.jar
+
+Build:Docker:
+  image: docker:latest
+  stage: package
+  services:
+    - docker:20.10.10-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+
+Deploy:
+  stage: deploy
+  image: bitnami/kubectl:1.27.3-debian-11-r2
+  script:
+    - kubectl config set-context root/pizzabaecker:user50
+    - kubectl apply -f deployment.yaml

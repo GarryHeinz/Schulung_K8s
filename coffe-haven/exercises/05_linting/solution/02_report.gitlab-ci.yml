@@ -1,0 +1,38 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  LOG_LEVEL: "DEBUG"
+
+lint-test-job:
+  image: ghcr.io/astral-sh/uv:0.9.24-python3.10-alpine
+  stage: test
+  script:
+    - uv run ruff check --output-format=junit > report.xml
+  artifacts:
+    reports:
+      junit: report.xml
+
+build-job:
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - echo "Compile complete."
+
+unit-test-job:
+  stage: test
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - sleep 60
+    - echo "Code coverage is 90%"
+
+
+deploy-job:
+  stage: deploy
+  environment: production
+  script:
+    - echo "Using log level $LOG_LEVEL"
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."

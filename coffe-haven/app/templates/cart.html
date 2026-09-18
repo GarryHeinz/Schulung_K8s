@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="space-y-8">
+    <div class="text-center space-y-3">
+        <p class="text-sm uppercase tracking-[0.4em] text-coffee-500">Order Ritual</p>
+        <h1 class="text-4xl font-serif font-semibold text-coffee-900">Your Cart</h1>
+        <p class="text-coffee-600">Review, balance, and finalize your brewing essentials.</p>
+    </div>
+
+    <div class="flex items-center justify-center gap-3 text-xs font-semibold tracking-[0.3em] text-coffee-500">
+        <span class="px-4 py-2 rounded-full bg-coffee-900 text-white">Cart</span>
+        <span class="h-px w-10 bg-coffee-200"></span>
+        <span class="px-4 py-2 rounded-full bg-coffee-100">Details</span>
+        <span class="h-px w-10 bg-coffee-200"></span>
+        <span class="px-4 py-2 rounded-full bg-coffee-100">Brew</span>
+    </div>
+
+    {% if message %}
+    <div class="rounded-3xl border border-latte-200 bg-latte-50/80 p-4 flex items-start gap-3">
+        <svg class="h-6 w-6 text-coffee-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-sm text-coffee-700">{{ message }}</p>
+    </div>
+    {% endif %}
+
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,2fr)_360px]">
+        <div class="space-y-6">
+            {% if cart %}
+            <div class="bg-white rounded-3xl border border-coffee-100 shadow-glow overflow-hidden">
+                <ul class="divide-y divide-coffee-100/60">
+                    {% for item in cart %}
+                    <li class="p-6">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="flex items-start gap-4">
+                                <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-coffee-100 to-white flex items-center justify-center font-serif text-xl text-coffee-700">
+                                    {{ item.product.name[0] }}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-serif text-coffee-900">{{ item.product.name }}</h3>
+                                    <p class="text-sm text-coffee-600">{{ item.product.description }}</p>
+                                    <div class="mt-2 flex flex-wrap gap-3 text-sm text-coffee-500">
+                                        <span class="px-3 py-1 rounded-full bg-coffee-50">Quantity {{ item.quantity }}</span>
+                                        <span class="px-3 py-1 rounded-full bg-coffee-50">${{ item.product.price }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between gap-4 sm:flex-col sm:items-end">
+                                <span class="text-2xl font-serif text-coffee-900">${{ item.quantity * item.product.price }}</span>
+                                <a href="{{ url_for('remove', item_id=item.id) }}"
+                                    class="inline-flex items-center text-sm text-red-500 hover:text-red-600">
+                                    Remove
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+            <div class="bg-white rounded-3xl border border-dashed border-coffee-200 p-10 text-center shadow-inner">
+                <div class="mx-auto h-24 w-24 rounded-full bg-coffee-50 flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-coffee-300" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-serif text-coffee-900">Your cart is empty</h3>
+                <p class="text-coffee-600 mt-2">Discover new brewing companions and craft your ritual.</p>
+                <a href="{{ url_for('index') }}"
+                    class="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full bg-coffee-800 text-white shadow-glow">
+                    Explore products
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <aside class="space-y-4">
+            <div class="rounded-3xl bg-white border border-coffee-100 p-6 shadow-glow">
+                <p class="text-sm uppercase tracking-[0.3em] text-coffee-500">Order Summary</p>
+                <div class="mt-4 flex justify-between text-coffee-700">
+                    <span>Items</span>
+                    <span>{{ cart|length }}</span>
+                </div>
+                <div class="mt-2 flex justify-between text-coffee-700">
+                    <span>Subtotal</span>
+                    <span>${{ "{:.2f}".format(total) }}</span>
+                </div>
+                <div class="mt-2 flex justify-between text-coffee-500 text-sm">
+                    <span>Shipping</span>
+                    <span>Complimentary</span>
+                </div>
+                <div class="mt-4 flex justify-between items-center">
+                    <span class="text-sm text-coffee-500">Total</span>
+                    <span class="text-3xl font-serif text-coffee-900">${{ "{:.2f}".format(total) }}</span>
+                </div>
+                <a href="{{ url_for('checkout') }}"
+                    class="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 bg-gradient-to-r from-coffee-800 to-coffee-600 text-white font-semibold shadow-glow">
+                    Proceed to Checkout
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                </a>
+                <p class="mt-4 text-xs text-coffee-500">Secure checkout. Orders roast & ship within 24h.</p>
+            </div>
+            <div class="rounded-3xl border border-latte-200 bg-latte-50/80 p-5 text-sm text-coffee-700">
+                <p class="font-semibold text-coffee-900">Need brewing guidance?</p>
+                <p class="mt-2">Our barista collective shares ratios, pour-over guides, and pairing notes with every
+                    shipment.</p>
+            </div>
+        </aside>
+    </div>
+
+    <div class="text-center">
+        <a href="{{ url_for('index') }}"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white border border-coffee-200 shadow-sm text-coffee-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+            Continue shopping
+        </a>
+    </div>
+</section>
+{% endblock %}

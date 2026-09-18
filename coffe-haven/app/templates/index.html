@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-coffee-900 via-coffee-700 to-coffee-500 text-white p-8 md:p-12 shadow-glow">
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle,_rgba(255,255,255,0.4)_10%,_transparent_40%)]"></div>
+    <div class="relative flex flex-col lg:flex-row gap-10 items-center">
+        <div class="flex-1 space-y-6">
+            <div class="inline-flex items-center gap-2 bg-white/15 px-4 py-2 rounded-full text-sm tracking-wide">
+                <span class="h-2 w-2 rounded-full bg-latte-200 animate-ping"></span>
+                New Winter Micro-Lot Release
+            </div>
+            <div>
+                <h1 class="text-4xl sm:text-5xl font-serif font-semibold leading-tight">Brew Rituals for the
+                    Design-Conscious</h1>
+                <p class="mt-4 text-white/80 text-lg max-w-xl">Explore a curated assortment of gear, beans, and rituals
+                    sourced from micro-roasters and boutique makers across the globe. Crafted for slow mornings and
+                    mindful moments.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="#collection"
+                    class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white text-coffee-800 font-semibold shadow-lg shadow-black/20">Shop
+                    the Collection</a>
+                <a href="#stories"
+                    class="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/60 text-white/90 hover:bg-white/10 transition">Discover
+                    our sourcing</a>
+            </div>
+            <dl class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                <div class="rounded-2xl bg-white/10 p-4 backdrop-blur">
+                    <dt class="text-white/70">Curated Products</dt>
+                    <dd class="text-2xl font-serif">{{ products|length }}+</dd>
+                </div>
+                <div class="rounded-2xl bg-white/10 p-4 backdrop-blur">
+                    <dt class="text-white/70">Micro Roasters</dt>
+                    <dd class="text-2xl font-serif">12</dd>
+                </div>
+                <div class="rounded-2xl bg-white/10 p-4 backdrop-blur">
+                    <dt class="text-white/70">Community Hours Brewed</dt>
+                    <dd class="text-2xl font-serif">4K</dd>
+                </div>
+            </dl>
+        </div>
+        <div class="flex-1 w-full">
+            <div class="relative bg-white/10 rounded-3xl p-6 backdrop-blur-xl border border-white/20 shadow-2xl">
+                <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
+                <div class="relative grid grid-cols-2 gap-4 text-sm">
+                    <div class="rounded-2xl bg-white/20 p-4">
+                        <p class="text-white/70">Signature Roast</p>
+                        <p class="text-2xl font-serif">No. 03</p>
+                    </div>
+                    <div class="rounded-2xl bg-white/20 p-4">
+                        <p class="text-white/70">Brew Mood</p>
+                        <p class="text-2xl font-serif">Velvety</p>
+                    </div>
+                    <div class="col-span-2 rounded-2xl bg-white/20 p-4">
+                        <p class="text-white/70">Taste Profile</p>
+                        <div class="mt-3 flex gap-2 text-xs uppercase tracking-widest">
+                            <span class="px-3 py-1 rounded-full bg-white/20">Floral</span>
+                            <span class="px-3 py-1 rounded-full bg-white/20">Stone Fruit</span>
+                            <span class="px-3 py-1 rounded-full bg-white/20">Cocoa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mt-12" id="collection">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div>
+            <p class="text-sm uppercase tracking-[0.35em] text-coffee-500">Collection</p>
+            <h2 class="text-3xl font-serif text-coffee-900">
+                {% set active_meta = categories | selectattr('slug', 'equalto', active_category) | list %}
+                {% if active_meta %}
+                    {{ active_meta[0].label }} Curations
+                {% else %}
+                    Barista's Essentials
+                {% endif %}
+            </h2>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+            {% for category in categories %}
+            {% set cat_url = url_for('index') if category.slug == 'all' else url_for('index', category=category.slug) %}
+            {% set is_active = active_category == category.slug %}
+            <a href="{{ cat_url }}"
+                class="px-4 py-1.5 rounded-full border transition {{ 'bg-coffee-900 text-white border-coffee-900' if is_active else 'bg-white border-coffee-200 text-coffee-700 hover:bg-coffee-50' }}">
+                {{ category.label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+        {% for product in products %}
+        <div
+            class="group relative bg-white/80 backdrop-blur rounded-3xl p-6 border border-coffee-100 shadow-[0_25px_60px_rgba(58,39,25,0.08)] hover:-translate-y-1 transition-transform">
+            <div class="absolute inset-x-10 -top-6 h-12 rounded-full bg-gradient-to-r from-latte-200 to-coffee-100 blur-2xl opacity-50 group-hover:opacity-80 transition"></div>
+            <div class="relative flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs uppercase tracking-[0.4em] text-coffee-500">No. {{ '%02d'|format(product.id) }}</span>
+                    <span class="px-3 py-1 rounded-full bg-coffee-50 text-coffee-700 text-xs">Signature</span>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="h-20 w-20 rounded-2xl bg-gradient-to-br from-coffee-100 via-white to-coffee-50 flex items-center justify-center text-coffee-700 font-serif text-3xl shadow-inner">
+                        {{ product.name[0] }}
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-serif text-coffee-900 leading-tight">{{ product.name }}</h3>
+                        <p class="text-sm text-coffee-600 mt-1">{{ product.description }}</p>
+                        <span class="inline-flex items-center mt-2 text-[0.65rem] uppercase tracking-[0.4em] text-coffee-400">{{ product.category }}</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <div>
+                        <p class="text-xs text-coffee-500 uppercase tracking-[0.3em]">Price</p>
+                        <p class="text-2xl font-serif text-coffee-900">${{ product.price }}</p>
+                    </div>
+                    <a href="{{ url_for('add', product_id=product.id) }}"
+                        class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-coffee-800 text-white shadow-glow">
+                        Add to Cart
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M5 12h14M13 6l6 6-6 6" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section id="stories" class="mt-16 grid gap-6 md:grid-cols-3">
+    <div class="md:col-span-2 bg-white rounded-3xl p-8 border border-coffee-100 shadow-glow">
+        <p class="text-sm uppercase tracking-[0.4em] text-coffee-500">Slow coffee journal</p>
+        <h3 class="text-3xl font-serif text-coffee-900 mt-4">Design-forward rituals, from roast to pour</h3>
+        <p class="text-coffee-600 mt-3">Every release is paired with guidance from our barista collective: pour-over
+            curves, latte-art prompts, and pairing notes for immersive mornings.</p>
+        <div class="mt-6 flex flex-wrap gap-3 text-sm">
+            <span class="px-4 py-2 rounded-full bg-coffee-50">Pour-over choreography</span>
+            <span class="px-4 py-2 rounded-full bg-coffee-50">Single-origin highlights</span>
+            <span class="px-4 py-2 rounded-full bg-coffee-50">Seasonal pairings</span>
+        </div>
+    </div>
+    <div class="bg-gradient-to-br from-latte-100 to-white rounded-3xl p-8 border border-latte-200/70">
+        <p class="text-sm uppercase tracking-[0.4em] text-coffee-500">Club access</p>
+        <h3 class="text-2xl font-serif text-coffee-900 mt-4">Reserve tasting flights</h3>
+        <p class="text-coffee-600 mt-3">Join our monthly cupping circle and unlock micro-lots reserved for the Coffee
+            Haven community.</p>
+        <a href="{{ url_for('cart') }}"
+            class="inline-flex items-center justify-center mt-6 px-5 py-3 rounded-full bg-coffee-800 text-white shadow-glow">
+            Reserve a seat
+        </a>
+    </div>
+</section>
+{% endblock %}
