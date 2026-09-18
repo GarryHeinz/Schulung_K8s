@@ -7,17 +7,17 @@ spec:
   - type: Container
     default:
       # Limit
-      cpu: 100m
+      cpu: 50m
       memory: 512Mi
     defaultRequest:
       # Request
-      cpu: 100m
+      cpu: 50m
       memory: 256Mi
     max:
-      cpu: 200m
+      cpu: 50m
       memory: 512Mi
     min:
-      cpu: 100m
+      cpu: 50m
       memory: 256Mi
 
 # https://kubernetes.io/docs/concepts/policy/limit-range/
