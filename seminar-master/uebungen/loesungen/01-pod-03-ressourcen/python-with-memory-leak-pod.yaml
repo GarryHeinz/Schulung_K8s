@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: memory-limit-test
+spec:
+  containers:
+  - name: memory-hog
+    image: python:3.9
+    command:
+    - python3
+    - -c
+    - |
+      a = []
+      while True:
+          a.append(a * 10**6)
+    resources:
+      limits:
+        memory: "200Mi"
+      requests:
+        memory: "200Mi"
+  restartPolicy: Never
+

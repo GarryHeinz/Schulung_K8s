@@ -1,0 +1,4 @@
+Veröffentlichen Sie ihren Dienst auf Basis von nginx.
+Der Dienst nginx soll über den DNS-Namen 
+- userXXX-nginx.kubernetes-cluster-XXX.schulung.gcp.ordix.de
+erreichbar sein.

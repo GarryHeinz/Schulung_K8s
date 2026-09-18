@@ -1,0 +1,10 @@
+Aktualisieren Sie das Manifest für das nginx-Deployment auf eine aktuelle Version (z. B. 1.26)
+
+- Wenden Sie dieses Manifest an.
+- Überprüfen Sie in den Pods, dass dadurch das aktuelle Image verwendet wurde.
+- Prüfen Sie, welche Replica-Sets zu diesem Deployment erzeugt wurden.
+- Prüfen Sie, dass das akutelle Deployment ein Replica-Set mit der Annotation  'deployment.kubernetes.io/revision: 2'  hat.
+- Fügen Sie dem aktuellen Deployment die Annotation 'Image-Version 1.26' hinzu.
+- Lassen Sie sich die History des Deployments ausgeben.
+- Führen Sie ein Rollback des Deployments durch - damit aktivieren Sie die ursprüngliche Version.
+- Machen sie das Rollback rückgängig :-)

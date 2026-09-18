@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: use-config-map-mount
+spec:
+  containers:
+    - name: firma-container
+      image: busybox:1.31.0
+      command: 
+      - /bin/sh
+      - -c
+      - |
+        ls -l /config
+        cat /config/firma
+        echo "=== done ==="
+      volumeMounts:
+      - name: firma-config-volume
+        mountPath: /config
+  volumes:
+    - name: firma-config-volume
+      configMap:
+        name: firma-config
+  restartPolicy: Never
+

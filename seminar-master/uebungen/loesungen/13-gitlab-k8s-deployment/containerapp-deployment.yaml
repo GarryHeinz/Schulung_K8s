@@ -1,0 +1,23 @@
+# Daten unten einsetzen!
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: containerapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: containerapp
+  template:
+    metadata:
+      labels:
+        app: containerapp
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - name: containerapp
+          image: <URL des Image>
+          ports:
+            - containerPort: 8080
+

@@ -1,0 +1,34 @@
+Mit dem folgenden Manifest starten Sie einen Wildfly im Container
+
+>>>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wildfly-pod
+  labels:
+    app: wildfly
+spec:
+  containers:
+    - name: wildfly
+      image: quay.io/wildfly/wildfly:28.0.0.Final-jdk17
+      command:
+        - /bin/sh
+        - -c
+        - |
+          /opt/jboss/wildfly/bin/add-user.sh admin admin123 --silent && \
+          /opt/jboss/wildfly/bin/standalone.sh \
+            -b=0.0.0.0 \
+            -bmanagement=0.0.0.0
+      ports:
+        - containerPort: 8080
+        - containerPort: 9990
+<<<
+Diesen Dienst möchten Sie über ingress veröffentlichen.
+Da Sie zwei Schnittstellen haben legen Sie auch zwei Services an.
+- wildfly-app-service für den Port 8080
+- wildfly-admin-service für den Port 9999
+
+Erzeugen Sie daraufhin ein Ingress, so dass Sie über die folgenden Urls auf den Service zugreifen können.
+- wildfly-admin-service über userXXX-wildfly-admin.kubernetes-cluster-XXX.schulung.gcp.ordix.de
+- wildfly-app-service über userXXX-wildfly.kubernetes-cluster-XXX.schulung.gcp.ordix.de
+

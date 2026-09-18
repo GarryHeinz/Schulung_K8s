@@ -1,0 +1,24 @@
+Aufgaben zur Wiederholung des Umgangs mit Pods
+1. Erstellen Sie ein Manifest für einen Pod:
+- Image: busybox
+- Kommando: In der Busybox wird der Shell-Befehl 'sleep infinity' ausgeführt.
+
+Hinweis: Die Struktur für das Manifest können Sie durch folgendes Kommando erzeugen:
+kubectl -n user-sk run busybox-sleep \
+  --image=busybox \
+  --restart=Never \
+  --dry-run=client \
+  -o yaml \
+  --command -- sleep infinity
+
+2. Starten Sie den Pod, mit dem Kommando 'kubectl apply -f'.
+
+3. Ermitteln Sie den Zustand des Pods.
+3.1 Listen Sie alle Pods mit 'kubectl get pod' auf.
+3.2 Ermitteln Sie die Eigenschaften des Pods mit 'kubectl describe pod'.
+
+4. Verbinden Sie sich mit dem Container mit 'kubectl exec'.
+
+5. Löschen Sie den Pod mit 'kubectl delete pod'.
+
+

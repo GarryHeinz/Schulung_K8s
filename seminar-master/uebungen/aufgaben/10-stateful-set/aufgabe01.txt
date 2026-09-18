@@ -1,0 +1,51 @@
+Richten Sie eine Postgres-Datenbank als Stateful Set ein.
+Es soll nur eine Replika der Postgres-Datenbank geben.
+
+Erstellen Sie als erstes einen head-less Service für den Port 5432 an.
+Auf diesem Port gibt es einen Listener für die Postgres-Datenbank.
+
+
+- Richten Sie folgenden Umgebungs-Variablen für den Postgres-Container ein
+>>>
+env:
+- name: POSTGRES_USER
+  value: admin
+- name: POSTGRES_PASSWORD
+  value: secret
+- name: POSTGRES_DB
+  value: mydatabase
+- name: PGDATA
+  value: /var/lib/postgresql/data/pgdata
+<<<
+
+Das Volume können Sie über die folgende VolumeClaimTemplate bereitstellen:
+>>>
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 100Mi
+<<<
+
+Das Volume mounten Sie in das Verzeichnis, dass Sie mit PGDATA definiert haben.
+>>>
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+
+<<<
+
+
+Nach der Installtion prüfen Sie die Verfügbarkeit mit einem PostgreSql-Client:
+$ kubectl run -it --rm --image=postgres:15 --restart=Never psql-client -- psql -h postgres.sk.svc.cluster.local -Uadmin -d mydatabase
+All commands and output from this session will be recorded in container logs, including credentials and sensitive information passed through the command prompt.
+If you don't see a command prompt, try pressing enter.
+--> Hier ist das Kennwort 'secret' einzugeben.
+psql (15.17 (Debian 15.17-1.pgdg13+1))
+Type "help" for help.
+
+mydatabase=#
+

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firma-config
+data:
+  firma: ORDIX AG
+  strasse: Karl-Schurz-Str. 19a  
+  ort: Paderborn
+

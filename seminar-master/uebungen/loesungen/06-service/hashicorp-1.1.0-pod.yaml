@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: hashicorp-echo
+    typ: demo
+  name: hashicorp-http-echo
+spec:
+  containers:
+  - image: hashicorp/http-echo:latest
+    name: hashicorp-http-echo
+    args:
+    - "-text=1.0.0"  
+    - "-listen=:9999"
+    ports:
+    - containerPort: 9999

@@ -1,0 +1,79 @@
+image: maven:3.9.9-eclipse-temurin-21
+
+stages:
+  - build
+  - docker
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE"
+  IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
+  KUBE_CONTEXT: "sk_at_ordix/containerapp:dev-agent"
+  KUBE_NAMESPACE: "dev-namespace"
+
+cache:
+  paths:
+    - .m2/repository
+
+build-jar:
+  stage: build
+  script:
+    - mvn clean package
+  artifacts:
+    name: "jar-artifact"
+    paths:
+      - target/*.jar
+    expire_in: 1 day
+
+docker-build-push:
+  stage: docker
+  image:
+    name: quay.io/buildah/stable:latest
+    entrypoint: [""]
+
+  variables:
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE"
+    IMAGE_TAG: "$CI_COMMIT_SHORT_SHA"
+    STORAGE_DRIVER: "vfs"
+    BUILDAH_ISOLATION: "chroot"
+
+  needs:
+    - job: build-jar
+      artifacts: true
+
+  script:
+    - buildah login
+        --username "$CI_REGISTRY_USER"
+        --password "$CI_REGISTRY_PASSWORD"
+        "$CI_REGISTRY"
+
+    - buildah bud
+        --storage-driver "$STORAGE_DRIVER"
+        --isolation "$BUILDAH_ISOLATION"
+        --format docker
+        --security-opt seccomp=unconfined
+        --file "$CI_PROJECT_DIR/Dockerfile"
+        --tag "$IMAGE_NAME:$IMAGE_TAG"
+        --tag "$IMAGE_NAME:latest"
+        "$CI_PROJECT_DIR"
+
+    - buildah push
+        --storage-driver "$STORAGE_DRIVER"
+        --retry 6
+        --retry-delay 10s
+        "$IMAGE_NAME:$IMAGE_TAG"
+deploy:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  needs:
+    - job: docker-build-push  
+  script:
+    - kubectl config use-context "$KUBE_CONTEXT"
+    - kubectl get ns
+    - kubectl create namespace "$KUBE_NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl -n "$KUBE_NAMESPACE" apply -f k8s/
+    - kubectl -n "$KUBE_NAMESPACE" set image deployment/containerapp containerapp="$IMAGE_NAME:$IMAGE_TAG"
+    - kubectl -n "$KUBE_NAMESPACE" rollout status deployment/containerapp
